@@ -5,6 +5,10 @@ Acompanhe seu progresso semanal passo a passo. Utilize este arquivo como um chec
 ---
 
 ## 🟩 Semana 1: Fundamentos Essenciais (Fundamentos Sólidos)
+
+### 📚 Recursos recomendados
+- Site: https://example.com
+- YouTube: https://youtube.com/channel1
 *Foco: Consolidar a base de programação estruturada e o paradigma de Orientação a Objetos utilizando Java.*
 
 ### Checklist de Atividades:
@@ -21,6 +25,10 @@ Acompanhe seu progresso semanal passo a passo. Utilize este arquivo como um chec
 ---
 
 ## 🟦 Semana 2: Java Moderno e Persistência (Dados)
+
+### 📚 Recursos recomendados
+- Site: https://example.com
+- YouTube: https://youtube.com/channel2
 *Foco: Escrever código Java idiomático usando recursos modernos e integrar a aplicação a bancos de dados relacionais com SQL puro.*
 
 ### Checklist de Atividades:
@@ -37,6 +45,10 @@ Acompanhe seu progresso semanal passo a passo. Utilize este arquivo como um chec
 ---
 
 ## 🟪 Semana 3: Framework Spring Boot Core
+
+### 📚 Recursos recomendados
+- Site: https://example.com
+- YouTube: https://youtube.com/channel3
 *Foco: Dominar o framework Java mais utilizado no mercado corporativo, entendendo desde o fluxo web até a persistência automática de dados.*
 
 ### Checklist de Atividades:
@@ -55,6 +67,10 @@ Acompanhe seu progresso semanal passo a passo. Utilize este arquivo como um chec
 ---
 
 ## 🟨 Semana 4: Produtividade, Automação e Portfólio
+
+### 📚 Recursos recomendados
+- Site: https://example.com
+- YouTube: https://youtube.com/channel4
 *Foco: Preparar seu portfólio para o mercado, integrando IA nas suas aplicações e automatizando fluxos de trabalho com ferramentas modernas.*
 
 ### Checklist de Atividades:

@@ -6,9 +6,9 @@ const weeksData = [
         foco: "Fundamentos Sólidos",
         desc: "Lógica, OO e Sintaxe Java",
         resources: [
-            { tag: "PDF / Link", name: "Formação Java Fundamentals", desc: "Sintaxe, tipos primitivos, condicionais e loops." },
-            { tag: "Curso", name: "Desafio 72 Horas Javanauta", desc: "Prática em Java estruturado e herança inicial." },
-            { tag: "Código Local", name: "Internacao.java", desc: "Análise da modelagem estrutural de classes e atributos." }
+            { tag: "📖 Curso", name: "Formação Java Fundamentals", desc: "Sintaxe, tipos primitivos, condicionais e loops.", url: "https://web.dio.me/track/formacao-java" },
+            { tag: "▶️ YouTube", name: "Loiane Groner - Java OO", desc: "Playlist completa de orientação a objetos em Java.", url: "https://www.youtube.com/playlist?list=PLGxZ4Rq3BOBq0KXHsp5J3PxyFaBIXVs3v" },
+            { tag: "📁 Código Local", name: "Internacao.java", desc: "Análise da modelagem estrutural de classes e atributos.", url: "" }
         ],
         template: `# 📝 Anotações de Estudo: Semana 01
 
@@ -90,9 +90,9 @@ public class Paciente {
         foco: "Java Moderno e Dados",
         desc: "Collections, Streams e SQL puro",
         resources: [
-            { tag: "PDF / Livro", name: "Livro Algaworks Spring Boot v3", desc: "Capítulos iniciais de estrutura e dados." },
-            { tag: "Banco de Dados", name: "Ambiente H2 & Postgres", desc: "Prática com tabelas locais e comandos SQL." },
-            { tag: "Referência", name: "Comandos SQL DDL/DML", desc: "CREATE TABLE, INSERT, SELECT com WHERE." }
+            { tag: "📖 Livro", name: "Livro Algaworks Spring Boot v3", desc: "Capítulos iniciais de estrutura e dados.", url: "https://www.algaworks.com/livro/" },
+            { tag: "🌐 Site", name: "H2 Database Console", desc: "Banco de dados em memória para prática local.", url: "https://h2database.com/" },
+            { tag: "▶️ YouTube", name: "Código Fonte TV - SQL Completo", desc: "SQL do zero ao avançado de forma prática.", url: "https://www.youtube.com/watch?v=dpghZFN6Bns" }
         ],
         template: `# 📝 Anotações de Estudo: Semana 02
 
@@ -166,9 +166,9 @@ SELECT * FROM paciente WHERE idade >= 30;
         foco: "Framework Spring Boot",
         desc: "DI, Spring Data JPA e APIs RESTful",
         resources: [
-            { tag: "PDF / Livro", name: "Livro Algaworks Spring Boot v3", desc: "Leitura crítica obrigatória do Capítulo 3.10 (JpaRepository)." },
-            { tag: "Curso / Trilha", name: "Bootcamp Santander 2026", desc: "Seguir a trilha backend com foco em Spring." },
-            { tag: "PDF Auxiliar", name: "Guia de Spring MVC e Thymeleaf", desc: "Estudar o Capítulo 3 para fluxo de requisição/resposta." }
+            { tag: "📖 Livro", name: "Livro Algaworks Spring Boot v3", desc: "Leitura crítica: Capítulo 3.10 (JpaRepository).", url: "https://www.algaworks.com/livro/" },
+            { tag: "🌐 Site", name: "Spring Boot Docs Oficial", desc: "Documentação oficial do Spring Boot em inglês.", url: "https://spring.io/projects/spring-boot" },
+            { tag: "▶️ YouTube", name: "Fernanda Kipper - Spring Boot", desc: "Tutoriais práticos de Spring Boot do zero.", url: "https://www.youtube.com/@kipperdev" }
         ],
         template: `# 📝 Anotações de Estudo: Semana 03
 
@@ -239,9 +239,9 @@ public class PacienteController {
         foco: "IA, Git e Portfólio",
         desc: "Git/GitHub, Automação n8n e IA",
         resources: [
-            { tag: "Automação", name: "n8n / DevQuest", desc: "Integrações, workflows inteligentes e webhooks." },
-            { tag: "Bootcamp", name: "Projeto Assistente Virtual", desc: "Criar o assistente virtual proposto no bootcamp." },
-            { tag: "Notion", name: "Guias Gratuitos no Notion", desc: "Links e resumos complementares de auxílio de roadmap." }
+            { tag: "🌐 Site", name: "n8n - Automação", desc: "Ferramenta de automação com workflows visuais.", url: "https://n8n.io/" },
+            { tag: "▶️ YouTube", name: "Rafaella Ballerini - Git & GitHub", desc: "Guia completo de versionamento com Git para iniciantes.", url: "https://www.youtube.com/@rafaellaballerini" },
+            { tag: "🌐 Site", name: "GitHub Docs", desc: "Documentação oficial do GitHub para organizar seu portfólio.", url: "https://docs.github.com/" }
         ],
         template: `# 📝 Anotações de Estudo: Semana 04
 
@@ -315,6 +315,7 @@ let userStatus = {};
 // --- INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", () => {
     loadFromLocalStorage();
+    loadCustomWeekMeta(); // load custom week names/resources before rendering
     initializeSidebars();
     selectWeek(1);
     
@@ -430,7 +431,10 @@ function initializeSidebars() {
         const li = document.createElement("li");
         li.className = `week-card ${w.id === currentWeekId ? 'active' : ''}`;
         li.id = `week-card-${w.id}`;
-        li.onclick = () => selectWeek(w.id);
+        // Clicking the card body (not the edit btn) selects the week
+        li.onclick = (e) => {
+            if (!e.target.closest('.week-edit-btn')) selectWeek(w.id);
+        };
 
         const status = userStatus[w.id] || "todo";
         let badgeClass = "status-todo";
@@ -446,12 +450,234 @@ function initializeSidebars() {
         li.innerHTML = `
             <div class="week-header">
                 <span class="week-num">${w.num}</span>
-                <span class="status-badge ${badgeClass}" id="badge-${w.id}">${badgeText}</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span class="status-badge ${badgeClass}" id="badge-${w.id}">${badgeText}</span>
+                    <button class="week-edit-btn" title="Editar semana" onclick="openWeekEditModal(${w.id})">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                </div>
             </div>
             <div class="week-foco">${w.foco}</div>
         `;
         listContainer.appendChild(li);
     });
+}
+
+// --- MODALS ---
+function openWeekEditModal(weekId) {
+    const w = weeksData.find(x => x.id === weekId);
+    if (!w) return;
+
+    // Remove existing modal if any
+    const old = document.getElementById('edit-modal-overlay');
+    if (old) old.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'edit-modal-overlay';
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal-box" id="edit-modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Editar Semana ${weekId}</h3>
+                <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <label class="modal-label">Nome da Semana</label>
+                <input id="modal-week-num" class="modal-input" type="text" value="${w.num}" placeholder="Ex: Semana 1" />
+
+                <label class="modal-label">Tema / Foco</label>
+                <input id="modal-week-foco" class="modal-input" type="text" value="${w.foco}" placeholder="Ex: Fundamentos Sólidos" />
+
+                <label class="modal-label">Tópicos (subtítulo)</label>
+                <input id="modal-week-desc" class="modal-input" type="text" value="${w.desc}" placeholder="Ex: Lógica, OO e Sintaxe Java" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveWeekEdit(${weekId})"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+            </div>
+        </div>
+    `;
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('modal-visible'));
+}
+
+function saveWeekEdit(weekId) {
+    const w = weeksData.find(x => x.id === weekId);
+    if (!w) return;
+
+    w.num  = document.getElementById('modal-week-num').value.trim()  || w.num;
+    w.foco = document.getElementById('modal-week-foco').value.trim() || w.foco;
+    w.desc = document.getElementById('modal-week-desc').value.trim() || w.desc;
+
+    // Persist custom week metadata
+    saveCustomWeekMeta();
+
+    // Refresh sidebar and header if this is the active week
+    initializeSidebars();
+    if (currentWeekId === weekId) {
+        document.getElementById('active-week-title').innerText   = `${w.num} - ${w.foco}`;
+        document.getElementById('active-week-subtitle').innerText = `Tópicos: ${w.desc}`;
+    }
+
+    closeModal();
+    showToast('Semana atualizada com sucesso!');
+}
+
+function openResourcesModal(weekId) {
+    const w = weeksData.find(x => x.id === weekId);
+    if (!w) return;
+
+    const old = document.getElementById('edit-modal-overlay');
+    if (old) old.remove();
+
+    // Build resource rows HTML
+    let rowsHtml = w.resources.map((r, i) => `
+        <div class="resource-edit-row" id="res-row-${i}">
+            <div class="resource-edit-header">
+                <span class="resource-edit-index">Recurso ${i + 1}</span>
+                <button class="modal-close-btn" style="width:24px;height:24px;font-size:0.7rem;" onclick="removeResourceRow(${i})" title="Remover">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+            <div class="resource-edit-grid">
+                <div>
+                    <label class="modal-label">Tipo / Tag</label>
+                    <input class="modal-input res-tag" type="text" value="${r.tag}" placeholder="Ex: 🌐 Site" />
+                </div>
+                <div>
+                    <label class="modal-label">Nome</label>
+                    <input class="modal-input res-name" type="text" value="${r.name}" placeholder="Nome do recurso" />
+                </div>
+            </div>
+            <label class="modal-label">Descrição</label>
+            <input class="modal-input res-desc" type="text" value="${r.desc}" placeholder="Breve descrição" />
+            <label class="modal-label">URL (site ou YouTube)</label>
+            <input class="modal-input res-url" type="url" value="${r.url || ''}" placeholder="https://..." />
+        </div>
+    `).join('');
+
+    const overlay = document.createElement('div');
+    overlay.id = 'edit-modal-overlay';
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal-box modal-box-wide" id="edit-modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-book-bookmark"></i> Editar Recursos — ${w.num}</h3>
+                <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="resources-edit-body">${rowsHtml}</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="addResourceRow(${weekId})"><i class="fa-solid fa-plus"></i> Adicionar Recurso</button>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveResourcesEdit(${weekId})"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('modal-visible'));
+    // Store week id for add row
+    overlay.dataset.weekId = weekId;
+}
+
+function addResourceRow(weekId) {
+    const body = document.getElementById('resources-edit-body');
+    const rows = body.querySelectorAll('.resource-edit-row');
+    const i = rows.length;
+    const div = document.createElement('div');
+    div.className = 'resource-edit-row';
+    div.id = `res-row-${i}`;
+    div.innerHTML = `
+        <div class="resource-edit-header">
+            <span class="resource-edit-index">Recurso ${i + 1}</span>
+            <button class="modal-close-btn" style="width:24px;height:24px;font-size:0.7rem;" onclick="removeResourceRow(${i})" title="Remover">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+        <div class="resource-edit-grid">
+            <div>
+                <label class="modal-label">Tipo / Tag</label>
+                <input class="modal-input res-tag" type="text" value="" placeholder="Ex: 🌐 Site" />
+            </div>
+            <div>
+                <label class="modal-label">Nome</label>
+                <input class="modal-input res-name" type="text" value="" placeholder="Nome do recurso" />
+            </div>
+        </div>
+        <label class="modal-label">Descrição</label>
+        <input class="modal-input res-desc" type="text" value="" placeholder="Breve descrição" />
+        <label class="modal-label">URL (site ou YouTube)</label>
+        <input class="modal-input res-url" type="url" value="" placeholder="https://..." />
+    `;
+    body.appendChild(div);
+}
+
+function removeResourceRow(index) {
+    const row = document.getElementById(`res-row-${index}`);
+    if (row) row.remove();
+}
+
+function saveResourcesEdit(weekId) {
+    const w = weeksData.find(x => x.id === weekId);
+    if (!w) return;
+
+    const body = document.getElementById('resources-edit-body');
+    const rows = body.querySelectorAll('.resource-edit-row');
+    const newResources = [];
+
+    rows.forEach(row => {
+        const tag  = row.querySelector('.res-tag')?.value.trim()  || '';
+        const name = row.querySelector('.res-name')?.value.trim() || '';
+        const desc = row.querySelector('.res-desc')?.value.trim() || '';
+        const url  = row.querySelector('.res-url')?.value.trim()  || '';
+        if (name) newResources.push({ tag, name, desc, url });
+    });
+
+    w.resources = newResources;
+    saveCustomWeekMeta();
+    renderResources(w.resources);
+    closeModal();
+    showToast('Recursos atualizados com sucesso!');
+}
+
+function saveCustomWeekMeta() {
+    const meta = weeksData.map(w => ({
+        id: w.id,
+        num: w.num,
+        foco: w.foco,
+        desc: w.desc,
+        resources: w.resources
+    }));
+    localStorage.setItem('javanauta_week_meta', JSON.stringify(meta));
+}
+
+function loadCustomWeekMeta() {
+    try {
+        const saved = localStorage.getItem('javanauta_week_meta');
+        if (!saved) return;
+        const meta = JSON.parse(saved);
+        meta.forEach(m => {
+            const w = weeksData.find(x => x.id === m.id);
+            if (w) {
+                w.num = m.num;
+                w.foco = m.foco;
+                w.desc = m.desc;
+                w.resources = m.resources;
+            }
+        });
+    } catch(e) {
+        console.error('Erro ao carregar metadados das semanas:', e);
+    }
+}
+
+function closeModal() {
+    const overlay = document.getElementById('edit-modal-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('modal-visible');
+    setTimeout(() => overlay.remove(), 250);
 }
 
 function selectWeek(id) {
@@ -522,16 +748,27 @@ function renderResources(resources) {
     const container = document.getElementById("resources-container");
     container.innerHTML = "";
 
-    resources.forEach(r => {
+    resources.forEach((r, index) => {
         const item = document.createElement("div");
         item.className = "resource-item";
+        const nameHtml = r.url
+            ? `<a class="resource-link" href="${r.url}" target="_blank" rel="noopener noreferrer">${r.name} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.6rem;"></i></a>`
+            : `<span class="resource-name">${r.name}</span>`;
         item.innerHTML = `
             <span class="resource-tag">${r.tag}</span>
-            <span class="resource-name">${r.name}</span>
+            ${nameHtml}
             <span class="resource-desc">${r.desc}</span>
         `;
         container.appendChild(item);
     });
+
+    // Edit button
+    const editBtn = document.createElement("button");
+    editBtn.className = "btn btn-secondary";
+    editBtn.style.cssText = "margin-top:10px; font-size:0.72rem; padding: 6px 10px;";
+    editBtn.innerHTML = `<i class="fa-solid fa-pen"></i> Editar Recursos`;
+    editBtn.onclick = () => openResourcesModal(currentWeekId);
+    container.appendChild(editBtn);
 }
 
 function updateOverallProgress() {
